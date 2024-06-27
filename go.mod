@@ -1,4 +1,4 @@
-module github.com/conclusionlogic/NodeAffinityGuard
+module github.com/conclusionlogic/node-affinity-guard
 
 go 1.22.4
 
