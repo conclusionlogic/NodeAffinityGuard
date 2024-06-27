@@ -1,0 +1,73 @@
+{{- $fullName := include "node-affinity-guard.fullname" . }}
+{{- $name := include "node-affinity-guard.name" . }}
+{{- if and .Values.deployment.enabled (eq .Values.deployment.kind "Deployment") -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "node-affinity-guard.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "node-affinity-guard.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "node-affinity-guard.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "node-affinity-guard.serviceAccountName" . }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ $name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: RESOURCE_TYPE
+              value: {{ .Values.monitorResource.type }}
+            - name: RESOURCE_NAME
+              value: {{ .Values.monitorResource.name }}
+            - name: RESOURCE_NAMESPACE
+              value: {{ .Values.monitorResource.namespace }}
+            {{- if .Values.configEnvVars }}
+            {{- toYaml .Values.configEnvVars | nindent 12 }}
+            {{- end }}
+          {{- with .Values.resources }}
+          resources: {{ toYaml . | nindent 16 }}
+          {{- end }}
+          {{- if .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.volumes }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
+      {{- end }}
+{{- end -}}

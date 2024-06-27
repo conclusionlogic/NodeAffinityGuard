@@ -1,0 +1,8 @@
+apiVersion: v2
+name: node-affinity-guard
+description: Deploy node-affinity-guard on Kubernetes
+type: application
+version: "0.0.1"
+appVersion: "v0.0.1"
+maintainers:
+  - name: conclusionlogic

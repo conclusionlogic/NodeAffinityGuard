@@ -1,0 +1,81 @@
+deployment:
+  # -- Enable deployment
+  enabled: true
+  # -- Deployment or DaemonSet
+  kind: Deployment
+  # -- Number of pods of the deployment (only applies when kind == Deployment)
+  replicas: 1
+
+
+image:
+  registry: docker.io
+  # -- The docker image repository to use
+  repository: conclusionlogic/node-affinity-guard
+  # -- The docker image tag to use
+  # @default Chart version
+  tag: ""
+  # -- The docker image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Use hostNetwork for the pod
+hostNetwork: true
+
+
+monitorResource:
+  type: "" # deployment or statefulset
+  name: ""
+  namespace: ""
+
+
+configEnvVars: []
+
+serviceAccount:
+  create: true
+  name: ""
+  labels: {}
+  annotations: {}
+
+rbac:
+  create: true
+
+# -- List the secrets containing the Docker creds for images in this Chart
+imagePullSecrets: []
+# -- Optional override for app name
+nameOverride: ""
+# -- Optional override for app fullname
+fullnameOverride: ""
+
+# -- Additional volumes to add to the pod
+volumes: []
+
+# -- Additional volumes to add to mount to the primary container
+volumeMounts: []
+
+# -- Additional annotations for the pods
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+# -- Resources to allocate to the pods
+resources: {}
+#  limits:
+#    cpu: 50m
+#    memory: 64Mi
+#  requests:
+#    cpu: 50m
+#    memory: 64Mi
+
+# -- Node labels for [pod assignment](https://kubernetes.io/docs/user-guide/node-selection/)
+nodeSelector: {}
+
+# -- [Tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
+# for pod assignment
+tolerations: []
+
+# -- [Affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity)
+# for pod assignment
+affinity: {}
