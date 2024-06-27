@@ -1,0 +1,16 @@
+apiVersion: v1
+entries:
+  node-affinity-guard:
+  - apiVersion: v2
+    appVersion: v0.0.1
+    created: "2024-06-27T21:05:52.039145+03:00"
+    description: Deploy node-affinity-guard on Kubernetes
+    digest: 259a3d5776c4f801b3c07e0b97fb4b8c6692211a951dbd69a595546b51ddebad
+    maintainers:
+    - name: conclusionlogic
+    name: node-affinity-guard
+    type: application
+    urls:
+    - node-affinity-guard-0.0.1.tgz
+    version: 0.0.1
+generated: "2024-06-27T21:05:52.039158+03:00"
